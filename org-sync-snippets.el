@@ -48,6 +48,8 @@
 ;; Alternatively, to turn your org-mode file into snippets
 ;;
 ;; M-x org-to-snippets
+;;
+;; Notice: you can prevent certain snippets from being exported to org by adding the `tangle: no` tag in them.
 
 ;;; Customize:
 
