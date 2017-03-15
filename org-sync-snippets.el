@@ -77,7 +77,8 @@
   "Compile snippet files to an 'org-mode' file."
   (interactive)
   (let ((output ""))
-    (setq output (concat output "#+TITLE: " oss-collection-title "\n\n"))
+    (setq output (concat output "#+TITLE: " oss-collection-title "\n"))
+    (setq output (concat output "#+AUTHOR: org-sync-snippets\n\n"))
     (dolist (mode (f-directories oss-snippets-dir))
       (setq output (concat output "* " (file-name-base mode) "\n"))
       (dolist (snippet-file (f-files mode))
