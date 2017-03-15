@@ -54,12 +54,12 @@
 ;; By default, snippets are taken from the 'user-emacs-directory' (typically '~/.emacs.d/snippets/') folder.
 ;; You can change this with
 ;;
-;; (setq snippets-dir "~/your/path/to/snippets")
+;; (setq oss-snippets-dir "~/your/path/to/snippets")
 ;;
 ;; Similarly, the org file compiled goes to your 'org-directory' (usually '~/org/snippets.org').
 ;; You can define a different one with
 ;;
-;; (setq org-snippet-file "~/your/path/to/snippet/file")
+;; (setq oss-org-snippets-file "~/your/path/to/snippet/file")
 ;;
 ;; Finally, if you want to save your snippets regularly, I recommend using a hook like
 ;;
@@ -69,16 +69,16 @@
 
 (require 'f)
 
-(defvar org-snippet-file (concat (file-name-as-directory org-directory) "snippets.org"))
-(defvar snippets-dir (concat user-emacs-directory "snippets/"))
-(defvar collection-title "Snippets Collection")
+(defvar oss-org-snippets-file (concat (file-name-as-directory org-directory) "snippets.org"))
+(defvar oss-snippets-dir (concat user-emacs-directory "snippets/"))
+(defvar oss-collection-title "Snippets Collection")
 
 (defun snippets-to-org ()
   "Compile snippet files to an 'org-mode' file."
   (interactive)
   (let ((output ""))
-    (setq output (concat output "#+TITLE: " collection-title "\n\n"))
-    (dolist (mode (f-directories snippets-dir))
+    (setq output (concat output "#+TITLE: " oss-collection-title "\n\n"))
+    (dolist (mode (f-directories oss-snippets-dir))
       (setq output (concat output "* " (file-name-base mode) "\n"))
       (dolist (snippet-file (f-files mode))
         (let ((content (f-read-text snippet-file 'utf-8)))
@@ -90,20 +90,22 @@
                                    "\n"
                                    (replace-regexp-in-string "^" "  " content) "\n"
                                    "#+END_SRC\n"))))))
-    (f-write-text output 'utf-8 org-snippet-file)))
+    (f-write-text output 'utf-8 oss-org-snippets-file))
+  (message "Done"))
 
 (defun org-to-snippets ()
   "Export the 'org-mode' file back to snippet files."
   (interactive)
-  (if (not (f-dir? snippets-dir))
-      (f-mkdir snippets-dir))
+  (if (not (f-dir? oss-snippets-dir))
+      (f-mkdir oss-snippets-dir))
   (with-temp-buffer
-    (insert-file-contents org-snippet-file)
+    (insert-file-contents oss-org-snippets-file)
     (while (re-search-forward "^* \\(.+-mode\\)" (point-max) t)
-      (let ((path (concat (file-name-as-directory snippets-dir) (match-string 1))))
+      (let ((path (concat (file-name-as-directory oss-snippets-dir) (match-string 1))))
         (if (not (f-dir? path))
             (f-mkdir path)))))
-  (org-babel-tangle-file org-snippet-file))
+  (org-babel-tangle-file oss-org-snippets-file)
+  (message "Done"))
 
 (provide 'org-sync-snippets)
 ;;; org-sync-snippets.el ends here

@@ -26,12 +26,12 @@ M-x org-to-snippets
 By default, snippets are taken from the 'user-emacs-directory' (typically '~/.emacs.d/snippets/') folder.
 You can change this with
 ```
-(setq snippets-dir "~/your/path/to/snippets")
+(setq oss-snippets-dir "~/your/path/to/snippets")
 ```
 Similarly, the org file compiled goes to your 'org-directory' (usually '~/org/snippets.org').
 You can define a different one with
 ```
-(setq org-snippet-file "~/your/path/to/snippet/file")
+(setq oss-org-snippet-file "~/your/path/to/snippet/file")
 ```
 Finally, if you want to save your snippets regularly, I recommend using a hook like
 ```
