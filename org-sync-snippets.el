@@ -24,7 +24,7 @@
 ;; Keywords: snippet org-mode yasnippet
 ;; URL: https://github.com/abrochard/org-sync-snippets
 ;; License: GNU General Public License >= 3
-;; Package-Requires: ((org "8.3.5") (emacs "24.3") (f  "0.17.3")
+;; Package-Requires: ((org "8.3.5") (emacs "24.3") (f "0.17.3"))
 
 ;;; Commentary:
 
@@ -68,7 +68,6 @@
 ;; (add-hook 'yas-after-reload-hook 'snippets-to-org)
 
 ;;; Code:
-
 (require 'f)
 
 (defvar oss-org-snippets-file (concat (file-name-as-directory org-directory) "snippets.org"))
