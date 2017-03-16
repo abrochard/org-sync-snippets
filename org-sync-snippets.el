@@ -21,7 +21,7 @@
 
 ;; Version: 1.0
 ;; Author: Adrien Brochard
-;; Keywords: snippet org-mode yasnippet
+;; Keywords: snippet org-mode yasnippet tools
 ;; URL: https://github.com/abrochard/org-sync-snippets
 ;; License: GNU General Public License >= 3
 ;; Package-Requires: ((org "8.3.5") (emacs "24.3") (f "0.17.3"))
@@ -41,6 +41,10 @@
 
 ;;; Usage:
 
+;; Load with
+;;
+;; (require 'org-sync-snippets)
+;;
 ;; To export your snippets to an org-mode file, use
 ;;
 ;; M-x snippets-to-org

@@ -13,7 +13,7 @@ For these reasons, I made `org-sync-snippets` which compiles snippets files to a
 
 ## Install
 
-Install from MELPA with
+Install from MELPA (if it is admitted) with
 ```
 M-x package-install org-sync-snippets
 ```
@@ -21,6 +21,10 @@ or load the present file.
 
 ## Usage
 
+Load with
+```
+(require 'org-sync-snippets)
+```
 To export your snippets to an org-mode file, use
 ```
 M-x snippets-to-org
