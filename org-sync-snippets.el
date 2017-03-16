@@ -72,13 +72,15 @@
 ;; (add-hook 'yas-after-reload-hook 'snippets-to-org)
 
 ;;; Code:
+(require 'org)
 (require 'f)
 
-(defvar oss-org-snippets-file (concat (file-name-as-directory org-directory) "snippets.org"))
-(defvar oss-snippets-dir (concat user-emacs-directory "snippets/"))
-(defvar oss-collection-title "Snippets Collection")
+(defcustom oss-org-snippets-file (concat (file-name-as-directory org-directory) "snippets.org"))
+(defcustom oss-snippets-dir (concat user-emacs-directory "snippets/"))
+(defcustom oss-collection-title "Snippets Collection")
 
-(defun snippets-to-org ()
+;;;###autoload
+(defun oss-snippets-to-org ()
   "Compile snippet files to an 'org-mode' file."
   (interactive)
   (let ((output ""))
@@ -99,7 +101,7 @@
     (f-write-text output 'utf-8 oss-org-snippets-file))
   (message "Done"))
 
-(defun org-to-snippets ()
+(defun oss-org-to-snippets ()
   "Export the 'org-mode' file back to snippet files."
   (interactive)
   (if (not (f-dir? oss-snippets-dir))
