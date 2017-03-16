@@ -47,11 +47,11 @@
 ;;
 ;; To export your snippets to an org-mode file, use
 ;;
-;; M-x snippets-to-org
+;; M-x oss-snippets-to-org
 ;;
 ;; Alternatively, to turn your org-mode file into snippets
 ;;
-;; M-x org-to-snippets
+;; M-x oss-org-to-snippets
 ;;
 ;; Notice: you can prevent certain snippets from being exported to org by adding the `tangle: no` tag in them.
 
