@@ -75,9 +75,18 @@
 (require 'org)
 (require 'f)
 
-(defcustom oss-org-snippets-file (concat (file-name-as-directory org-directory) "snippets.org"))
-(defcustom oss-snippets-dir (concat user-emacs-directory "snippets/"))
-(defcustom oss-collection-title "Snippets Collection")
+(defcustom oss-org-snippets-file (concat (file-name-as-directory org-directory) "snippets.org")
+  "Location of the snippets.org file."
+  :type 'file
+  :group 'oss)
+(defcustom oss-snippets-dir (concat user-emacs-directory "snippets/")
+  "Location the snippets folder."
+  :type 'directory
+  :group 'oss)
+(defcustom oss-collection-title "Snippets Collection"
+  "Title of the snippets.org collection."
+  :type 'string
+  :group 'oss)
 
 ;;;###autoload
 (defun oss-snippets-to-org ()
