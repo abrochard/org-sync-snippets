@@ -27,11 +27,11 @@ Load with
 ```
 To export your snippets to an org-mode file, use
 ```
-M-x oss-snippets-to-org
+M-x org-sync-snippets-snippets-to-org
 ```
 Alternatively, to turn your org-mode file into snippets
 ```
-M-x oss-org-to-snippets
+M-x org-sync-snippets-org-to-snippets
 ```
 Notice: you can prevent certain snippets from being exported to org by adding the `tangle: no` tag in them.
 ```
@@ -49,12 +49,12 @@ This particular snippet will not make it into the compiled org file.
 By default, snippets are taken from the 'user-emacs-directory' (typically '~/.emacs.d/snippets/') folder.
 You can change this with
 ```
-(setq oss-snippets-dir "~/your/path/to/snippets")
+(setq org-sync-snippets-snippets-dir "~/your/path/to/snippets")
 ```
 Similarly, the org file compiled goes to your 'org-directory' (usually '~/org/snippets.org').
 You can define a different one with
 ```
-(setq oss-org-snippet-file "~/your/path/to/snippet/file")
+(setq org-sync-snippets-org-snippet-file "~/your/path/to/snippet/file")
 ```
 Finally, if you want to save your snippets regularly, I recommend using a hook like
 ```
