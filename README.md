@@ -1,3 +1,5 @@
+[![MELPA](https://melpa.org/packages/org-sync-snippets-badge.svg)](https://melpa.org/#/org-sync-snippets)
+
 # org-sync-snippets
 Simple extension to export snippets to org-mode and vice versa.
 
@@ -13,7 +15,7 @@ For these reasons, I made `org-sync-snippets` which compiles snippets files to a
 
 ## Install
 
-Install from MELPA (if it is admitted) with
+Install from MELPA with
 ```
 M-x package-install org-sync-snippets
 ```
