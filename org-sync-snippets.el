@@ -110,7 +110,7 @@ LEVEL the current folder level."
                   ":tangle " snippet-file
                   "\n"
                   (replace-regexp-in-string "^" "  "  content) "\n"
-                  "#+END_SRC\n")))))
+                  "#+END_SRC\n\n")))))
 
 (defun org-sync-snippets--to-org (snippets-dir org-file)
   "Write snippets to org file.
