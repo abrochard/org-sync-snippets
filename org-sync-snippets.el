@@ -93,6 +93,25 @@
   :type 'string
   :group 'org-sync-snippets)
 
+(defcustom org-sync-snippets-dir-prefix "{SNIPPETS-DIR}"
+  "Prefix for snippets file path."
+  :type 'string
+  :group 'org-sync-snippets)
+
+(defun org-sync-snippets--encode-snippets-dir (snippets-dir snippets-file)
+  "Turn the snippets dir into an encoded location.
+
+SNIPPETS-DIR the snippet directory.
+SNIPPETS-FILE the snippet file."
+  (replace-regexp-in-string (expand-file-name snippets-dir) org-sync-snippets-dir-prefix snippets-file))
+
+(defun org-sync-snippets--decode-snippets-dir (snippets-dir encoded-snippets-file)
+  "Decode the encoded snippets file into a real path.
+
+SNIPPETS-DIR the snippets location.
+ENCODED-SNIPPETS-FILE the encoded snippet destination."
+  (replace-regexp-in-string org-sync-snippets-dir-prefix snippets-dir encoded-snippets-file t))
+
 (defun org-sync-snippets--parse-dir (snippets-dir level)
   "Recursive function to  write snippets to org file.
 
@@ -103,14 +122,16 @@ LEVEL the current folder level."
   (dolist (mode (f-directories snippets-dir))
     (org-sync-snippets--parse-dir mode (+ level 1)))
   (dolist (snippet-file (f-files snippets-dir))
-      (let ((content (f-read-text snippet-file 'utf-8)))
-        (unless (string-match "^# tangle: no" content)
-          (insert (make-string (+ 1 level) (aref "*" 0)) " " (file-name-base snippet-file) "\n\n"
-                  "#+BEGIN_SRC snippet "
-                  ":tangle " snippet-file
-                  "\n"
-                  (replace-regexp-in-string "^" "  "  content) "\n"
-                  "#+END_SRC\n\n")))))
+    (let ((content (f-read-text snippet-file 'utf-8))
+          (destination (org-sync-snippets--encode-snippets-dir
+                        org-sync-snippets-snippets-dir snippet-file)))
+      (unless (string-match "^# tangle: no" content)
+        (insert (make-string (+ 1 level) (aref "*" 0)) " " (file-name-base snippet-file) "\n\n"
+                "#+BEGIN_SRC snippet "
+                ":tangle " destination
+                "\n"
+                (replace-regexp-in-string "^" "  "  content) "\n"
+                "#+END_SRC\n\n")))))
 
 (defun org-sync-snippets--to-org (snippets-dir org-file)
   "Write snippets to org file.
@@ -141,7 +162,8 @@ ORG-FILE the location of the compiled org file."
                            "\\(\\([ \t]+.*\n\\)+\\)"
                            "#\\+END_SRC$")))
       (while (re-search-forward pattern (point-max) t)
-        (let ((destination (match-string 1))
+        (let ((destination (org-sync-snippets--decode-snippets-dir
+                            org-sync-snippets-snippets-dir (match-string 1)))
               (content (match-string 2)))
           (org-sync-snippets--create-dir-structure destination)
           (with-temp-file destination
