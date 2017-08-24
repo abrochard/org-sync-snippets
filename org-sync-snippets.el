@@ -122,23 +122,38 @@ ORG-FILE the location of the compiled org file."
     (insert "#+AUTHOR: org-sync-snippets\n\n")
     (org-sync-snippets--parse-dir snippets-dir 0)))
 
-(defun org-sync-snippets--create-dir-structure (org-file)
-  "Make sure that all folders are created in preparation for tangling.
+(defun org-sync-snippets--create-dir-structure (destination)
+  "Make sure that the destination folder exists.
+
+DESTINATION the destination of the snippet."
+  (let ((directory (f-dirname destination)))
+    (if (not (f-dir? directory))
+        (make-directory directory t))))
+
+(defun org-sync-snippets--parse-snippet-org-file (org-file)
+  "Parse the org file similar to org-babel, but without a newline at the end.
 
 ORG-FILE the location of the compiled org file."
   (with-temp-buffer
     (insert-file-contents org-file)
-    (while (re-search-forward ":tangle \\(/.*/\\)" (point-max) t)
-      (if (not (f-dir? (match-string 1)))
-          (make-directory (match-string 1) t)))))
+    (goto-char (point-min))
+    (let ((pattern (concat "^#\\+BEGIN_SRC snippet :tangle \\(.*\\)\n"
+                           "\\(\\([ \t]+.*\n\\)+\\)"
+                           "#\\+END_SRC$")))
+      (while (re-search-forward pattern (point-max) t)
+        (let ((destination (match-string 1))
+              (content (match-string 2)))
+          (org-sync-snippets--create-dir-structure destination)
+          (with-temp-file destination
+            (insert (replace-regexp-in-string "^\s\\{2\\}" "" content))
+            (delete-char -1)))))))
 
 (defun org-sync-snippets--to-snippets (org-file snippets-dir)
   "Tangle org file to snippets.
 
 ORG-FILE the location of the compiled org file
 SNIPPETS-DIR is the location of the snippet files."
-  (org-sync-snippets--create-dir-structure org-file)
-  (org-babel-tangle-file org-file))
+  (org-sync-snippets--parse-snippet-org-file org-file))
 
 ;;;###autoload
 (defun org-sync-snippets-snippets-to-org ()
