@@ -159,7 +159,7 @@ ORG-FILE the location of the compiled org file."
     (insert-file-contents org-file)
     (goto-char (point-min))
     (let ((pattern (concat "^#\\+BEGIN_SRC snippet :tangle \\(.*\\)\n"
-                           "\\(\\([ \t]+.*\n\\)+\\)"
+                           "\\(\\([ \t]+.*\n\\|\n\\)+\\)"
                            "#\\+END_SRC$")))
       (while (re-search-forward pattern (point-max) t)
         (let ((destination (org-sync-snippets--decode-snippets-dir
