@@ -151,24 +151,35 @@ DESTINATION the destination of the snippet."
     (if (not (f-dir? directory))
         (make-directory directory t))))
 
+(defun org-sync-snippets--iterate-org-src (org-file)
+  "Iterate over source blocks of ORG-FILE.
+Return list of cons '((destination content)"
+  (with-temp-buffer
+    (insert-file-contents org-file)
+    (org-element-map (org-element-parse-buffer) 'src-block
+      (lambda (el)
+        (cons
+         (org-sync-snippets--decode-snippets-dir
+          org-sync-snippets-snippets-dir
+          (replace-regexp-in-string "^:tangle " "" (org-element-property :parameters el)))
+         (org-element-property :value el))))))
+
+(defun org-sync-snippets--create-snippet-file (entry)
+  "Create a snippet file from ENTRY (cons destination content."
+  (let ((destination (car entry))
+        (content (cdr entry)))
+    (org-sync-snippets--create-dir-structure destination)
+    (with-temp-file destination
+      (insert (replace-regexp-in-string "^\s\\{2\\}" "" content))
+      (delete-char -1))))
+
 (defun org-sync-snippets--parse-snippet-org-file (org-file)
   "Parse the org file similar to org-babel, but without a newline at the end.
 
 ORG-FILE the location of the compiled org file."
-  (with-temp-buffer
-    (insert-file-contents org-file)
-    (goto-char (point-min))
-    (let ((pattern (concat "^#\\+BEGIN_SRC snippet :tangle \\(.*\\)\n"
-                           "\\(\\([ \t]*.*\n\\|\n\\)+\\)"
-                           "#\\+END_SRC$")))
-      (while (re-search-forward pattern (point-max) t)
-        (let ((destination (org-sync-snippets--decode-snippets-dir
-                            org-sync-snippets-snippets-dir (match-string 1)))
-              (content (match-string 2)))
-          (org-sync-snippets--create-dir-structure destination)
-          (with-temp-file destination
-            (insert (replace-regexp-in-string "^\s\\{2\\}" "" content))
-            (delete-char -1)))))))
+  (mapcar
+   #'org-sync-snippets--create-snippet-file
+   (org-sync-snippets--iterate-org-src org-file)))
 
 (defun org-sync-snippets--to-snippets (org-file snippets-dir)
   "Tangle org file to snippets.
